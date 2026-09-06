@@ -31,9 +31,22 @@ changes every command in Phase 5 and nothing else.
 | **The CLI** | `appfactory` runs in a terminal | shell commands |
 | **Both** | a Mac with the CLI installed *and* the MCP connected | the CLI, for the reason below |
 
-**Prefer the CLI when you have both.** The hosted job runs on Linux, and the
-iPhone build needs a real Mac with Xcode. Everything up to and including the
-website works identically through either door; the phone apps do not.
+**Everything works through either door, including the iPhone build** — with one
+setup step. The hosted job runs on Linux and cannot run Xcode, so a native build
+takes one of two routes:
+
+| Route | Needs | Driven by |
+|---|---|---|
+| **Xcode Cloud** — Apple builds on their own Macs | a one-time workflow set up in App Store Connect (a browser, not a Mac), and Apple connected | `build_ios` / `appfactory xcode-cloud start` |
+| **A local Mac** with Xcode | a Mac | `appfactory release ios` |
+
+`get_ios_build_status` answers whether Xcode Cloud is configured **for this
+app** — do not assume it from a connected Apple account, which is a different
+fact. If it is not configured, say so and point at the setup rather than
+promising a build the factory cannot start.
+
+**Prefer the CLI when you have both**, for everything else: it is a shorter loop
+and the whole pipeline is local.
 
 **If neither:** `npm i -g github:jezemm/app-factory`, or connect the App Factory
 MCP server. Do not clone the factory repo, and do not create an empty GitHub
@@ -55,7 +68,8 @@ the flow changes.
 | Where am I? | `get_app_status` | `appfactory checklist` |
 | Run whatever can run | `run_next_steps` | `appfactory checklist run` |
 | Answer a question it asked | `answer_questions` | `appfactory checklist set <key> <value>` |
-| iPhone build, on a Mac | — | `appfactory release ios` |
+| Start an iPhone build | `build_ios` (Xcode Cloud) | `appfactory release ios` (local Mac) or `appfactory xcode-cloud start` |
+| How did the iPhone build go? | `get_ios_build_status` | `appfactory xcode-cloud status` |
 
 **`get_app_status` / `appfactory checklist` is the source of truth about
 progress. Never keep your own list in the conversation** — it goes stale the

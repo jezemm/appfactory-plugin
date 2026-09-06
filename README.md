@@ -1,19 +1,49 @@
-# App Factory — Claude Code plugin
+# App Factory — the agent skill
 
 Take an app idea from a sentence to a working, deployed app: a website, an
 iPhone app and an Android app, from one codebase.
+
+## Install
+
+**Claude Code** — inside Claude Code:
 
 ```
 /plugin marketplace add jezemm/appfactory-plugin
 /plugin install appfactory
 ```
 
-Then describe what you want:
+**Codex** — same skill, different directory, so a script does the copy:
+
+```
+git clone --depth 1 https://github.com/jezemm/appfactory-plugin
+sh appfactory-plugin/install.sh
+codex mcp login appfactory
+```
+
+That puts the skill in `~/.agents/skills/appfactory/` and appends the App
+Factory server to `~/.codex/config.toml`. Read the script first if you like —
+it is thirty lines and it only copies files.
+
+**Anything else that speaks MCP** — Cursor, and others — add this address as a
+server in its settings and sign in:
+
+```
+https://mcp.appfactory.jeremymarks.com.au/mcp
+```
+
+You still get the whole flow: the same instructions are served as an MCP prompt
+called **ideate-and-build**, so a client that cannot read a skill file gets them
+anyway.
+
+## Use it
 
 ```
 /appfactory an app for tracking which plants in my garden need
 watering, and when I last did it
 ```
+
+In Codex, or anywhere without a slash command, just say it: *"use App Factory to
+build me an app for tracking…"*.
 
 ## What it does
 
@@ -39,18 +69,18 @@ Four stages. You are involved in the first three and barely needed for the last.
   happen, split into what can and cannot be undone, and waits.
 - **Submit your app for review.** There is deliberately no setting for it.
 
-## Connect the factory first
+## Connect the factory
 
-The plugin is the *instructions*. The factory itself is a hosted service, and
-without it the plugin can plan an app but not build one.
+The skill is the *instructions*. The factory is a hosted service, and without it
+the skill can plan an app but not build one. Claude Code:
 
 ```
 claude mcp add --transport http appfactory \
   https://mcp.appfactory.jeremymarks.com.au/mcp
 ```
 
-Then `/mcp` inside Claude Code and sign in through your browser. Any other MCP
-client works the same way — add that address in its settings.
+then `/mcp` to sign in. Codex: `install.sh` above writes the config; then
+`codex mcp login appfactory`.
 
 Prefer a terminal? `npm i -g github:jezemm/app-factory` gives you the CLI, which
 does the same job in a shorter loop and can build iOS on a Mac you already have.
