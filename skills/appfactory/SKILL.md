@@ -5,6 +5,39 @@ description: Take an app idea from concept to a fully-built app using the App Fa
 
 # Ideate to App
 
+## STOP. Is the factory connected?
+
+**Before anything else — before Phase 0, before a single question — check that
+you can see tools named `create_app`, `get_app_status` and `run_next_steps`.**
+
+If they are not there, this skill cannot build anything. It is the instructions;
+the factory is a separate service, and installing one does not connect the
+other. Say this, and then wait:
+
+> App Factory is not connected yet — I have the instructions but not the
+> factory. Connect it with:
+>
+>     claude mcp add --transport http appfactory https://mcp.appfactory.jeremymarks.com.au/mcp
+>
+> then `/mcp` to sign in. In Codex: `codex mcp login appfactory`. In anything
+> else, add that address as an MCP server in its settings.
+
+**Do not work around it.** Not by installing the CLI — that repository is
+private and the failure does not say so. Not by building the app yourself.
+
+This is not hypothetical. Somebody installed the plugin, never connected the
+server, and the agent went looking for the CLI, hit an SSH prompt, tried HTTPS,
+got a 404, decided the factory was unavailable, and **built a plain Vite app by
+hand** while announcing it was "treating the installed App Factory workflow as
+the process authority". No chassis, no product plan, no QA pass, no deploy, no
+store listing — none of what the factory does. The person asked for an App
+Factory app and got a directory, and could not tell until they went looking for
+the things that were never going to exist.
+
+A missing factory is a one-sentence answer, not a substitute build.
+
+---
+
 You take a raw app idea through clarification, analysis, persona testing, design and build, ending with a real, working app — starting from whatever has already been written down about it. The App Factory pipeline handles scaffolding, native projects, signing, cloud deployment, store listings, and release. You handle the thinking, the questioning, and the factory loop.
 
 **The phases:**
@@ -25,11 +58,14 @@ before the build and the pipeline after it, and it works the same whichever way
 you can reach the factory. Find out which that is before Phase 1, because it
 changes every command in Phase 5 and nothing else.
 
+**THE MCP SERVER IS THE DEFAULT.** Check for it first, use it unless you have a
+reason not to, and never try to install anything to get started.
+
 | You have | How to tell | What you drive |
 |---|---|---|
-| **The MCP server** | tools named `create_app`, `get_app_status`, `run_next_steps` are available | tool calls |
-| **The CLI** | `appfactory` runs in a terminal | shell commands |
-| **Both** | a Mac with the CLI installed *and* the MCP connected | the CLI, for the reason below |
+| **The MCP server** | tools named `create_app`, `get_app_status`, `run_next_steps` are available | **tool calls — this is the normal case** |
+| **The CLI as well** | `appfactory` already runs in a terminal | either; see below |
+| **Neither** | no tools, no command | stop and say so — see below |
 
 **Everything works through either door, including the iPhone build** — with one
 setup step. The hosted job runs on Linux and cannot run Xcode, so a native build
@@ -45,12 +81,41 @@ app** — do not assume it from a connected Apple account, which is a different
 fact. If it is not configured, say so and point at the setup rather than
 promising a build the factory cannot start.
 
-**Prefer the CLI when you have both**, for everything else: it is a shorter loop
-and the whole pipeline is local.
+**When the CLI is ALREADY INSTALLED, prefer it** for everything else: it is a
+shorter loop and the whole pipeline is local. "Already installed" means the
+`appfactory` command runs. It does not mean you should install it.
 
-**If neither:** `npm i -g github:jezemm/app-factory`, or connect the App Factory
-MCP server. Do not clone the factory repo, and do not create an empty GitHub
-repo first — the pipeline makes one.
+### Do not try to install the CLI
+
+**`npm i -g github:jezemm/app-factory` will not work for most people.** That
+repository is private. An agent that tries it hits an SSH credential prompt, or
+a 404 over HTTPS, and neither error says "you do not have access" — they read
+like a broken machine.
+
+That has already cost a real session. An agent tried the install, failed twice,
+concluded the CLI was unavailable, and **quietly built the app by hand with a
+plain Vite scaffold instead** — announcing that it was "treating the installed
+App Factory workflow as the process authority". It was not building an App
+Factory app at all. No chassis, no plan, no QA pass, no deploy, nothing the
+pipeline does. The person asked for an App Factory app and got a directory.
+
+So:
+
+- **If the MCP tools are there, use them.** They do everything up to and
+  including a live website, and they need nothing installed. This is the
+  supported path and the one to reach for.
+- **If there are no tools and no `appfactory` command, STOP and say so.** Tell
+  the person to connect the server:
+  `claude mcp add --transport http appfactory https://mcp.appfactory.jeremymarks.com.au/mcp`,
+  or add that address in their assistant's settings. Then wait.
+- **Never substitute your own scaffold for the factory.** Building "something
+  equivalent" by hand is not a fallback, it is a different product with the same
+  name — and the person cannot tell until they go looking for the deploy, the
+  store listing and the QA report that were never going to exist. If you cannot
+  reach the factory, the honest output is a sentence, not a repository.
+
+Do not clone the factory repo, and do not create an empty GitHub repo first —
+the pipeline makes one.
 
 ### The same step, both ways
 

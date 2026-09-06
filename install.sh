@@ -47,17 +47,33 @@ else
     echo "auth = \"oauth\""
   } >> "$CODEX_CFG"
   echo "  added the server to $CODEX_CFG"
-  echo ""
-  echo "  Now sign in:   codex mcp login appfactory"
 fi
+
+# THE STEP EVERYBODY SKIPS, said as loudly as a shell script can.
+#
+# Somebody installed the skill, never signed in, and their agent went looking
+# for the CLI instead — hit an SSH prompt, tried HTTPS, got a 404 on a private
+# repo, and built a plain Vite app by hand rather than saying it was stuck. The
+# skill is only the instructions; without the server connected there is no
+# factory behind them, and nothing about a successful copy says so.
+echo ""
+echo "  ─────────────────────────────────────────────────────────────"
+echo "  NOT DONE YET. The skill is installed; the factory is not"
+echo "  connected. Run this now, or nothing above can build anything:"
+echo ""
+echo "      codex mcp login appfactory"
+echo ""
+echo "  ─────────────────────────────────────────────────────────────" 
 
 # ── Claude Code ──────────────────────────────────────────────────────────────
 # Not copied. Claude Code installs this as a plugin and manages updates itself,
 # and a stray copy in ~/.claude/skills would shadow the managed one and never
 # get updated. Printed instead.
 echo ""
-echo "For Claude Code, run these INSIDE Claude Code instead:"
+echo "For Claude Code, run these instead — the FIRST one is the factory,"
+echo "and the other two are only the instructions:"
 echo "  claude mcp add --transport http appfactory $MCP_URL"
+echo "  then /mcp inside Claude Code, and sign in"
 echo "  /plugin marketplace add jezemm/appfactory-plugin"
 echo "  /plugin install appfactory"
 echo ""

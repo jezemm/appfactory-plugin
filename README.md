@@ -3,7 +3,44 @@
 Take an app idea from a sentence to a working, deployed app: a website, an
 iPhone app and an Android app, from one codebase.
 
-## Install
+## Two things, and the second is the one people skip
+
+This repo is the **instructions**. The **factory** is a separate hosted service.
+Installing the skill without connecting the server gives you an assistant that
+has read the manual and has no machine — and it will not obviously fail, it will
+go looking for something else to do.
+
+Connect the factory first. Then install the skill.
+
+## 1. Connect the factory
+
+**Claude Code:**
+
+```
+claude mcp add --transport http appfactory \
+  https://mcp.appfactory.jeremymarks.com.au/mcp
+```
+
+then `/mcp` inside Claude Code and sign in through your browser.
+
+**Codex:** `install.sh` below writes the config, then:
+
+```
+codex mcp login appfactory
+```
+
+**Anything else that speaks MCP** — Cursor, and others — add this address as a
+server in its settings and sign in:
+
+```
+https://mcp.appfactory.jeremymarks.com.au/mcp
+```
+
+You get the whole flow either way: the same instructions are served as an MCP
+prompt called **ideate-and-build**, so a client that cannot read a skill file
+gets them anyway.
+
+## 2. Install the skill
 
 **Claude Code** — inside Claude Code:
 
@@ -23,17 +60,6 @@ codex mcp login appfactory
 That puts the skill in `~/.agents/skills/appfactory/` and appends the App
 Factory server to `~/.codex/config.toml`. Read the script first if you like —
 it is thirty lines and it only copies files.
-
-**Anything else that speaks MCP** — Cursor, and others — add this address as a
-server in its settings and sign in:
-
-```
-https://mcp.appfactory.jeremymarks.com.au/mcp
-```
-
-You still get the whole flow: the same instructions are served as an MCP prompt
-called **ideate-and-build**, so a client that cannot read a skill file gets them
-anyway.
 
 ## Use it
 
@@ -69,21 +95,14 @@ Four stages. You are involved in the first three and barely needed for the last.
   happen, split into what can and cannot be undone, and waits.
 - **Submit your app for review.** There is deliberately no setting for it.
 
-## Connect the factory
+## If it says it cannot find the factory
 
-The skill is the *instructions*. The factory is a hosted service, and without it
-the skill can plan an app but not build one. Claude Code:
+You installed step 2 and skipped step 1. Go back and connect it.
 
-```
-claude mcp add --transport http appfactory \
-  https://mcp.appfactory.jeremymarks.com.au/mcp
-```
-
-then `/mcp` to sign in. Codex: `install.sh` above writes the config; then
-`codex mcp login appfactory`.
-
-Prefer a terminal? `npm i -g github:jezemm/app-factory` gives you the CLI, which
-does the same job in a shorter loop and can build iOS on a Mac you already have.
+The CLI (`appfactory` in a terminal) is a shorter loop and can build iOS on a
+Mac you already have — but its repository is **private**, so unless you have
+been given access, the hosted service above is the one to use. It does
+everything up to and including a live website.
 
 ### You do not need a Mac
 
