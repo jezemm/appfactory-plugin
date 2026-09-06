@@ -1,0 +1,35 @@
+App Factory
+Copyright (c) 2026 Jeremy Marks. All rights reserved.
+
+PRE-RELEASE. This is not an open-source licence, and it is deliberately a
+narrow one — the terms this project ships under long-term have not been
+decided, and inventing them here would be pretending otherwise.
+
+WHAT YOU MAY DO
+
+If you have been given access to this repository by the copyright holder, you
+may install it, run it, read it, and build and publish your own applications
+with it. Anything you make with it is yours; see below.
+
+WHAT YOU MAY NOT DO
+
+Redistribute this software or derivative works of it, offer it to third parties
+as a hosted or managed service, or remove or alter this notice.
+
+APPS YOU BUILD ARE NOT COVERED BY THIS
+
+Everything under template/ and template-v1/ — the chassis every generated app is
+built on — is MIT licensed, separately, and those terms are the ones that follow
+your app. See template/LICENSE.
+
+That separation is the whole point. A tool that generates your app and then
+keeps a claim on the result is not a tool. Nothing in this file reaches the code
+App Factory writes for you, and nothing in it can stop you shipping, selling or
+relicensing it.
+
+NO WARRANTY
+
+Provided "as is", without warranty of any kind. This software creates real
+accounts, real repositories and real billable cloud resources on your behalf,
+and publishes to app stores under your name. You are responsible for what it
+does with your credentials.
