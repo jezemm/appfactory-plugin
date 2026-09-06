@@ -39,16 +39,30 @@ Four stages. You are involved in the first three and barely needed for the last.
   happen, split into what can and cannot be undone, and waits.
 - **Submit your app for review.** There is deliberately no setting for it.
 
-## What you need
+## Connect the factory first
 
-The plugin is the instructions. The factory itself is either:
+The plugin is the *instructions*. The factory itself is a hosted service, and
+without it the plugin can plan an app but not build one.
 
-- **the hosted service**, connected to Claude Code as an MCP server — nothing to
-  install, and it does everything up to and including a live website; or
-- **the CLI**, `npm i -g github:jezemm/app-factory`, which additionally builds
-  the actual iPhone and Android apps.
+```
+claude mcp add --transport http appfactory \
+  https://mcp.appfactory.jeremymarks.com.au/mcp
+```
 
-Without one of those connected, the plugin can plan an app but not build one.
+Then `/mcp` inside Claude Code and sign in through your browser. Any other MCP
+client works the same way — add that address in its settings.
+
+Prefer a terminal? `npm i -g github:jezemm/app-factory` gives you the CLI, which
+does the same job in a shorter loop and can build iOS on a Mac you already have.
+
+### You do not need a Mac
+
+Apple only allows iPhone apps to be built on macOS — and Apple rents its own
+Macs, as Xcode Cloud. App Factory starts a build there and reads the result
+back, so the whole thing works without one. It needs a one-time workflow set up
+in App Store Connect, which is a browser rather than a Mac; App Factory
+deliberately does not create it for you, because how often you build spends your
+Apple allowance.
 
 ## Where your app ends up
 
