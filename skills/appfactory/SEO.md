@@ -16,8 +16,7 @@ different answers to "what is this app called". Mark complete with
 
 ## Run the skills, do not improvise
 
-Each of these is installed and current. Invoke them; do not paraphrase them from
-memory, and do not hand-write an audit this repo already has a tool for.
+Invoke them; do not paraphrase them from memory or hand-write an audit a skill already does.
 
 | Skill | What it answers | When |
 |---|---|---|
@@ -70,7 +69,7 @@ catalogue, the task list and the price table already exist in `src/data/`, the
 per-model and per-category pages cost a template each and can never drift from
 what the app actually does, because the claim on the page is computed from the
 source the app books against. Decide the page SET deliberately; do not decide
-each page. See `UX-POLISH.md` § 11 and `docs/MARKETING-SURFACE.md`.
+each page. See [`MARKETING-SITE.md`](MARKETING-SITE.md) and `docs/MARKETING-SURFACE.md`.
 
 **Write for the question, not the product.** People search the problem
 ("split a restaurant bill by what each person ate"), not the category ("expense
@@ -83,10 +82,6 @@ being lifted out of the page still makes sense. `seo-geo` scores this directly.
 **The OG image is the whole preview.** It is what appears in every share, every
 message and every AI card. Check it renders — `seo-images` will, and a broken
 `og-image.png` looks identical to a working one until somebody shares the link.
-
-**Store listing and landing page are the same research.** The App Store and Play
-both index the listing's title and subtitle; the keyword work from `seo-plan`
-feeds both. Do this before `listing.copy`, not after.
 
 ---
 

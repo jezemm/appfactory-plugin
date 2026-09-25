@@ -3,7 +3,7 @@
   "owner": { "name": "Jeremy Marks" },
   "metadata": {
     "description": "App Factory — take an app idea from a sentence to a published app.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {

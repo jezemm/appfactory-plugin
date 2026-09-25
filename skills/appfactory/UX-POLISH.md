@@ -1,67 +1,27 @@
 # UX polish pass
 
-You are a world-class UX designer and interaction engineer reviewing this app. Your job is to audit every surface, flow, and interaction — then implement concrete improvements that elevate this from functional to exceptional.
+Audit every surface, flow and interaction of `/app`, then implement the fixes in code — do not stop at a list. Runs after `app.code`, once the primary flow works end to end, and before screenshots so the listing shows the polished UI. `app.review` closes itself when a passing `appfactory verify` summary matches the current source.
 
-Work through the following review dimensions one at a time. For each, identify specific issues in the current implementation, then make the changes directly.
-
-**When to run this:** After the first build (`app.code`) when the primary user flow works end to end. Mark complete with `appfactory checklist done app.ux`. Prefer finishing this before screenshots so the store listing shows the polished UI.
-
-**The skills this pass runs through, not around.** Each one is invoked, not
-paraphrased — they carry current, specific guidance that this file deliberately
-does not duplicate:
+**Invoke these skills; do not paraphrase them:**
 
 | Skill | What it is for here | When |
 |---|---|---|
 | `impeccable` | the whole-interface audit: hierarchy, cognitive load, anti-patterns, live browser iteration | first, to find what is wrong |
-| `ui-ux-pro-max` | searchable style, palette, font-pairing, icon and chart data, and stack-specific implementation | when a fix needs a concrete value rather than a direction |
+| `ui-ux-pro-max` | concrete style, palette, font-pairing, icon and chart values, stack-specific implementation | when a fix needs a value, not a direction |
 | `microinteractions` | dimension 3, scored against its eight-question diagnostic | on every control a person touches |
-| `dataviz` | any chart, meter, stat tile or dashboard in the app | before writing chart code, not after |
-| `design` | a canvas of artboards when a screen needs to be SEEN side by side before it is rebuilt | only when a rebuild is on the table |
+| `dataviz` | any chart, meter, stat tile or dashboard | before writing chart code |
+| `design` | a canvas of artboards when a screen needs re-laying-out, not re-styling | only when a rebuild is on the table |
 
-`impeccable` first: it is the one that finds problems. `ui-ux-pro-max` second:
-it is the one that supplies values. Do not run `design` as a matter of course —
-it produces a mockup, and this pass changes running code. Reach for it when a
-screen needs re-laying-out rather than re-styling, and when comparing several
-directions on one canvas is genuinely cheaper than trying them in the app.
+**Fan the dimensions out** — one subagent per dimension ([`PARALLEL.md`](PARALLEL.md)). Keep dimension 1 (hierarchy) and the final side-by-side look at all screenshots yourself: a design system is a cross-screen property.
 
-**Fan the dimensions out.** They are independent by construction — accessibility,
-copy, performance and responsive behaviour do not need to agree about anything —
-so one subagent per dimension is the cheapest way to run this pass, and the file
-dumps stay in the children. Two things stay with you: dimension 1 (hierarchy)
-and the final look at all the screenshots side by side, because a design system
-is a cross-screen property and an agent that sees one screen cannot see it. See
-[`PARALLEL.md`](PARALLEL.md).
-
-**How to work:**
-1. Review the app against every dimension below.
-2. Identify the top issues — prioritize by impact on user confidence and task completion.
-3. Implement the improvements directly in the code. Don't just list suggestions.
-4. For each change, use the minimum CSS/JS needed. Prefer CSS transitions over JS animation libraries. Prefer `transform` and `opacity` for animations (GPU-accelerated, no layout thrash).
-5. Keep animations subtle — they should feel natural, not performative. If a user would consciously notice an animation on second use, it's probably too much.
-6. Test that nothing breaks on mobile or with keyboard navigation after your changes.
-7. Report the issues found and the improvements made.
-
-Leave `src/core/` alone — it is factory-owned and an upgrade replaces it. Polish the app's own screens, styles and copy: `src/App.vue`, `src/components/`, `src/styles/app.css`.
-
-**Start by checking what is MISSING, not what is ugly.** The chassis ships a known set of patterns — tab bar, pushed screens, onboarding, empty states, sheets, swipe-to-delete, undo, grouped settings, screen-reader announcements — most of them Ionic components, and the most common finding in this pass is that the build skipped several of them rather than that it implemented them badly. Walk the "What every app ships with" table in `SKILL.md` first; anything absent without a stated reason is the highest-impact fix on this page.
-
-**A literal hex value or pixel padding in a component is a finding.** Every one is a place the app stops matching itself. Replace with the token: `var(--accent)`, `var(--sp-4)`, `var(--radius)`, `var(--text-sm)`.
-
-**A clean static scan of a `.vue` tree is not evidence.** The `impeccable`
-skill's detector routes by extension: only `.html` and `.htm` go through the
-engine that resolves `:root` custom properties, and everything else is matched
-as literal source text. So on a chassis app — which has no raw hex anywhere by
-construction — it returns zero findings *because* the app did the tokenised
-thing correctly. One app scanned clean and scored 10/20 on a screen-by-screen
-audit of the same build. Use the browser-grade path, which reads computed
-styles, or audit the rendered screens; never report a clean detector run as a
-pass.
-
-**And the checks below are per-screen; a design system is not.** Six toolbar
-patterns and five heading sizes across twenty-four screens is invisible one
-screen at a time, and nobody reviews twenty-four screens side by side. When you
-finish, put the screenshots next to each other and look at the chrome across all
-of them at once.
+**Rules:**
+- Leave `src/core/` alone. Polish `src/App.vue`, `src/components/`, `src/styles/app.css`.
+- **Check what is MISSING before what is ugly.** Walk "What every app ships with" in [`PHASE-4-SPEC.md`](PHASE-4-SPEC.md) first; a chassis pattern absent without a stated reason is the highest-impact fix.
+- **A literal hex value or pixel padding in a component is a finding.** Replace with `var(--accent)`, `var(--sp-4)`, `var(--radius)`, `var(--text-sm)`.
+- **A clean `impeccable` scan of a `.vue` tree is not evidence** — its detector resolves `:root` properties only in `.html`. Audit rendered screens or use the browser-grade path.
+- **Put all the screenshots side by side at the end** and look at the chrome across them — toolbar and heading drift is invisible one screen at a time.
+- Minimum CSS/JS; CSS transitions over JS libraries; animate `transform` and `opacity`; subtle enough not to notice on second use. Re-check mobile and keyboard after changes.
+- Report issues found, changes made, and the `microinteractions` score with its failing rows.
 
 ---
 
@@ -84,17 +44,8 @@ of them at once.
 
 ### 2b. THE FIRST RUN
 
-Onboarding is the first screen anyone sees and, in every app this factory has
-built, the ugliest one — so it gets its own dimension rather than a line inside
-flows.
-
 **Use `<Onboarding :cards>` from `src/core/ui/`. Do not build a welcome screen.**
-The chassis owns the layout — art in a fixed-aspect box, the promise at display
-size, dots, one full-width action in the thumb zone, Skip quiet and below. Every
-hand-rolled version regresses to a toolbar with a title in it, which is what
-made these screens look like a settings wizard for as long as they did.
-
-What is actually yours is the CARDS, and that is where the ugliness usually is:
+The chassis owns the layout; the CARDS are yours:
 
 - **Three cards. Four at the outside.** A fourth card is a manual, and nobody
   reads a manual to find out what an app is.
@@ -268,235 +219,6 @@ The last 5% that separates good from memorable:
 - Error pages (404, 500) that are actually helpful and on-brand — not generic.
 - The very first interaction (first click, first hover, first scroll) should already feel polished.
 
-### 11. THE MARKETING SURFACE — THE PAGE BEFORE THE APP
+### 11. THE MARKETING SURFACE
 
-Dimensions 1–10 are about `/app`. This one is about `/`, which is the URL the
-store listing points at, the link a person is handed, and the first page a
-store reviewer opens. It is the only surface in the product whose defects are
-seen by people who never installed anything.
-
-**Nothing else in the pipeline audits it.** `appfactory ux` boots the QA session
-at `/demo` and walks the router's screens, so `/` is not merely unvisited — it
-is unreachable from the mechanism that decides what to visit. The one automated
-eye on it is `scripts/ci-lighthouse.mjs`, which grades performance and
-accessibility. A card still reading "Replace these three" scores 100 on both.
-So this dimension is done by opening the page and reading it.
-
-**And it ships whether or not anyone writes it.** `web.deploy` publishes the
-scaffold as it stands. One app went live with `{{app.tagline}}` under its name,
-three cards headed "Replace these three", three captions reading "Name the
-screen", and an About page opening "Replace this paragraph" — and was still
-wearing them when the release step asked for that URL for the App Store.
-
-**This dimension is about whether the page is any good. `SEO.md` is about
-whether it can be found** — positioning, keywords, structured data, answer-engine
-citability, and the fact that the store listing is the same research. Run this
-one first: an SEO pass over a page that still says "Replace these three" is
-auditing the scaffold.
-
-**If the app has no audience to convince, delete `public/landing.html` and say
-so.** `/` then serves the app and this dimension does not apply. That is a real
-answer for a tool somebody installs from a link they were already sent. It is
-not the answer for anything with a price, a catalogue, a coverage area or a
-competitor.
-
-#### 11.1 What pages the product needs
-
-One page is not a marketing site. The template ships one because a scaffold has
-one thing to say; a product usually has more, and the page set is not a taste
-question — **it falls out of the product's own data**. One page per repeated
-thing, one page per question a buyer asks before committing:
-
-| The product has… | …so the site has |
-|---|---|
-| a catalogue (models, plans, venues, breeds) | an index page and one page per item |
-| use cases people arrive with | one page per use case, named the way they say it |
-| a price that is not obvious | a pricing page with a **worked example**, priced at the expensive case |
-| a coverage area, a device requirement, a waitlist | a page that answers "does this work for me" on the page |
-| a thing that can go wrong | a safety/trust page that names what is *not* in place yet |
-| a process with steps after the button | a how-it-works page carrying real screenshots |
-
-Nobody searches for a product name they have never heard. They search for the
-job, and the page that answers the job is the one that gets found — which is
-also why these pages must exist as real URLs rather than as anchors on one long
-scroller. Plus the four the factory already ships: privacy, terms, support,
-about, **rewritten for this app**.
-
-Sanity check: if you cannot name what question each page answers, in the
-customer's words, you have made a site map instead of a site.
-
-#### 11.2 Generate the site from the product's data — this is the default
-
-**Do not type a number onto a marketing page.** Write a build script that
-imports the app's own data modules and its own pure functions, and computes
-every figure the site prints. A price, an arrival time, a rate, a capability
-list, a covered suburb, a model name — each of these is a fact the app already
-owns, and the app is the thing that has to honour it.
-
-The rules that make this safe:
-
-- **Read-only, one direction.** The generator may import from `src/data/*` and
-  from pure helpers (`src/lib/pricing.js`, `src/lib/geo.js`); it must never
-  write there, and it must stay out of `src/pages/`, `src/components/` and the
-  app's state. It is a build script, not the app.
-- **Wire it to the build** (`"prebuild": "node scripts/build-site.mjs"`) so the
-  site cannot be older than the data. Commit the output.
-- **Compute the claim through the same function the app calls.** Not a
-  reimplementation of the formula — the function. That is the whole point: the
-  site and the product cannot disagree, because there is only one of them.
-- **Fail the build on the cases that would produce a lie**: a catalogue item
-  with no image at the widths the page requests, a figure that came back null.
-  Warn loudly; never render a blank or a zero.
-- **Omit rather than invent.** No figure, no sentence. A generator that writes
-  "from $XX" is worse than one that writes nothing.
-
-The payoff is a sentence only this product can say, in the place it matters
-most: *"Optimus can be with you in about 42 minutes. A 3-hour job is $215,
-delivered."* Every one of those values is the app's answer, rendered at build
-time.
-
-#### 11.3 The CTA contract — carry the intent through the door
-
-A visitor who read a page about one thing and pressed the button must arrive at
-**that thing**, not at the app's home screen. Every CTA carries what its page
-was about:
-
-```
-/app?robot=optimus     the item page they were reading
-/app?task=cleaning     the use case they arrived with
-/app?mode=now          the intent the button expressed
-/app?address=3186      the answer they just gave on the page
-```
-
-- **Read the query once at boot and push a route.** On this chassis the router
-  uses a memory history, so the served URL is invisible unless something reads
-  it deliberately.
-- **Validate every parameter against the app's own catalogue.** An unknown value
-  degrades to the home screen. A link that lands on a not-found screen is worse
-  than a link that lands on Home, and links get shortened, pasted and mangled.
-- **Write the contract once.** The generator builds every href through the same
-  helper the app parses with. A contract stated in two places is a contract that
-  will drift, and the marketing side is the half nobody tests.
-- **Every page gets an exit to the app, the demo, and the beta** — header,
-  footer and the page's own close. A person decides on the page they are on.
-
-#### 11.4 The hero
-
-- **The product is in it.** The real object, the real screen, the real thing —
-  above the fold, large. A centred headline over two buttons is what a page
-  looks like when nobody had anything to show.
-- **One sentence under the buttons that only this product could say**, carrying
-  a real figure from 11.2. Not the tagline again.
-- **One primary action.** A second is allowed and it is nearly always the demo.
-  A third is a decision the visitor has to make before they know anything.
-- **Preload the hero image** and give it `fetchpriority="high"`; it is the LCP
-  element and the budget is measured on it.
-
-#### 11.5 One accent, and it is not a bullet
-
-The accent belongs to the primary button, the brand mark, the current nav item
-and the focus ring. **Nowhere else.** Not list bullets, not link colour, not
-hover, not section headings, not icons.
-
-This is the single most common way a generated site goes generic, and it is
-measurable: one site painted its accent onto a list bullet and shipped 147 red
-dots across 22 pages, up to 21 on one page. A reader who has been shown that red
-means nothing cannot be got at with red when it finally means something — and
-the thing it means is "press this".
-
-Count them. If the accent appears more than a handful of times on a page, the
-page has no primary action.
-
-#### 11.6 Imagery, and the demo
-
-- **Photographs and product shots fill their frame.** `object-fit: cover`, cropped
-  deliberately. `object-fit: contain` inside a padded grey box inside a bordered
-  card is a decision to make the best asset on the page small.
-- **Ship the widths.** Three (≈480 / 800 / full), a `sizes` attribute, `loading="lazy"`
-  below the fold, explicit `width`/`height` on every image so nothing shifts.
-- **App screenshots come from `/demo`**, captured by `appfactory screenshots`,
-  which writes web-sized frames to `public/marketing/`. They are the same
-  captures as the store frames, so they cannot drift from the shipping UI.
-  A broken image is worse than no image — delete the block if the captures do
-  not exist yet.
-- **The demo is the strongest asset the site has.** It is the product, working,
-  with nothing to install. Link it from the hero, from the header, from the
-  footer, and close on it. One ghost button on page two is how to waste it.
-
-#### 11.7 Evidence honesty
-
-The site is the first place a product is tempted to lie, and everything on it is
-read by a store reviewer.
-
-- **No invented testimonials, logos, ratings, user counts, awards, press
-  mentions or certifications.** Not as placeholders, not "for layout", not
-  greyed out. If it is not true today, the section does not exist today.
-- **Say what is not real yet.** A fleet, a coverage area or an integration that
-  is illustrative says so, in the footer and on the page that claims it. This
-  reads as confidence, and its absence is what gets a listing rejected.
-- **Prices and availability must be the app's** (11.2) or they must not be
-  numbers.
-- **Every link resolves.** Including the TestFlight one — an absent or blank
-  value renders *nothing*, never a placeholder href.
-
-#### 11.8 Responsive and accessibility floors
-
-Non-negotiable, and cheap on a static page:
-
-- One `<h1>` per page; heading levels descend without skipping.
-- A skip link, a `<main id="main">`, landmark `<nav>`/`<footer>` with labels,
-  `aria-current="page"` on the active nav item.
-- Every interactive target ≥ 44px, including nav links and the mobile menu.
-- Body text ≥ 16px and a measure of 60–75 characters; never a pinned root
-  font-size (see § 7 — the same rule as the app).
-- Contrast 4.5:1 for text, 3:1 for large text and UI edges — including the
-  accent on its own background, which is where a brand red usually fails.
-- Visible focus on everything focusable, and `prefers-reduced-motion` honoured
-  by every transition on the page.
-- Works at 320px wide and at 200% zoom without a horizontal scrollbar.
-- The page must be readable and navigable with **no JavaScript at all** — it is
-  static HTML; anything interactive on it (a coverage check, a waitlist form)
-  is an enhancement over content that already reads.
-
-#### 11.9 The budgets
-
-`scripts/ci-lighthouse.mjs` runs Lighthouse against `/` and `/app` in CI and
-fails the workflow: **performance ≥ 55, accessibility ≥ 85**, plus `budget.json`
-(FCP 4000ms, LCP 5500ms, TTI 7500ms; 900KB script, 200KB CSS, 500KB image,
-1800KB total, 15 third-party requests).
-
-Those are floors for an app shell that ships a framework. **A static marketing
-page has no excuse for scoring near them** — hand-written CSS, no framework, no
-third-party script, and images that are the only weight on the page should put
-`/` at or near 100 on both. Treat anything under 95 on `/` as a finding, and
-check the SEO basics Lighthouse is not currently asked to score: a canonical, a
-unique title and meta description per page, and the page's presence in
-`sitemap.xml`.
-
-#### 11.10 You have built a generic template if…
-
-Every one of these is a *default* — what the obvious choice produces when nobody
-decided. Each was found on a real generated site, and each is a rewrite:
-
-- **The hero is centred text with no product in it**, and the thing being sold
-  first appears below the fold.
-- **"How it works" is three grey cards.** Three cards is what a section looks
-  like when it has nothing to show; a numbered typographic list with a real
-  screenshot beside it is what it looks like when it does.
-- **A grid of identical tiles** — eight boxes of the same size, in which nothing
-  is more important than anything else, which is the same as nothing being
-  important.
-- **The accent is on the bullets** (§ 11.5), and the primary button has no
-  colour left of its own.
-- **The one sentence only this product can say is missing** from the page that
-  exists to say it — the computed price, the arrival time, the number that is
-  the whole reason the product is interesting.
-- **The demo is linked once, on page two, as a ghost button** — or not at all
-  from the home page.
-- **The photography is shrunk on purpose**: `object-fit: contain` in a padded
-  grey box in a bordered card.
-- **The three cards still say what the scaffold said**, or the captions still
-  say "Name the screen", or About still opens "Replace this paragraph".
-- **Every CTA says "Open the app"** and goes to the same place (§ 11.3).
-- **The page could be about any product** if you swapped the name out. That is
-  the summary test, and if it passes, none of the above got fixed.
+`/` is reviewed separately, once, after the factory generates it — see [`MARKETING-SITE.md`](MARKETING-SITE.md). Findability is [`SEO.md`](SEO.md).

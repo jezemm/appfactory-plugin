@@ -1,8 +1,19 @@
 {
   "name": "appfactory",
-  "description": "Turn an app idea into a working, deployed app — on the web and in both stores. Ideation, design spec, build, QA, and the ship pipeline, driven through the App Factory MCP server or the CLI.",
-  "version": "0.2.0",
-  "author": { "name": "Jeremy Marks" },
+  "description": "Build an app end to end from one sentence \u2014 autonomously. Research with parallel subagents, design direction first, spec, build, verify until the quality gate passes, and ship to the web, TestFlight and Play testing, driven through the App Factory MCP server or the CLI.",
+  "version": "0.3.0",
+  "author": {
+    "name": "Jeremy Marks"
+  },
   "homepage": "https://appfactory.jeremymarks.com.au/docs/architecture",
-  "keywords": ["app", "ios", "android", "capacitor", "ionic", "vue", "app-store", "mcp"]
+  "keywords": [
+    "app",
+    "ios",
+    "android",
+    "capacitor",
+    "ionic",
+    "vue",
+    "app-store",
+    "mcp"
+  ]
 }
