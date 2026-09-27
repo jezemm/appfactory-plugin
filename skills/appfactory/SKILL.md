@@ -81,7 +81,7 @@ The app's **name** and its **bundle id** are reserved with Apple worldwide the m
 | **2–3 Research** | Five expert lenses and 25 personas as parallel subagents; judge synthesis; `PERSONAS.md` | [`PHASE-2-RESEARCH.md`](PHASE-2-RESEARCH.md) |
 | **4 Spec** | `IDEATION.md` a stranger could build from, screen by screen; design review before saving | [`PHASE-4-SPEC.md`](PHASE-4-SPEC.md) |
 | **5 Build** | Scaffold → Prove the pipeline on the empty app → Build the app's functionality → `appfactory verify` loop → UX polish → public page | [`PHASE-5-BUILD.md`](PHASE-5-BUILD.md), then [`PARALLEL.md`](PARALLEL.md), [`UX-POLISH.md`](UX-POLISH.md), [`MARKETING-SITE.md`](MARKETING-SITE.md) |
-| **6 Ship** | Checklist loop to empty frontier: deploy, DNS, search pass, store records, listing, release, final checks | [`PHASE-6-SHIP.md`](PHASE-6-SHIP.md), [`SEO.md`](SEO.md) |
+| **6 Ship** | Checklist loop to empty frontier: deploy, DNS, search pass, store records, listing, release, final checks | [`PHASE-6-SHIP.md`](PHASE-6-SHIP.md), [`SEO.md`](SEO.md), [`ANDROID-BETA.md`](ANDROID-BETA.md) (public Android beta: Google Group + closed testing) |
 
 Phases 5 and 6 overlap on purpose: start `checklist run --apply` and the product work at the same time.
 

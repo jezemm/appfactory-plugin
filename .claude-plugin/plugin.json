@@ -1,7 +1,7 @@
 {
   "name": "appfactory",
   "description": "Build an app end to end from one sentence \u2014 autonomously. Research with parallel subagents, design direction first, spec, build, verify until the quality gate passes, and ship to the web, TestFlight and Play testing, driven through the App Factory MCP server or the CLI.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "Jeremy Marks"
   },
