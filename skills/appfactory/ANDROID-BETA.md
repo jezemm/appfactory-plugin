@@ -28,8 +28,11 @@ Internal testing is **not** this. It's limited to a hand-kept email list and doe
 4. **Closed track** (Test and release → Testing → Closed testing → Closed testing - Alpha → Manage track):
    - **Countries / regions** tab → Add countries / regions → select all → Save.
    - **Preview and confirm the release** → the only warning left should be "no deobfuscation file" (harmless) → Save.
-5. **Publishing overview** → "Submit N changes for review". Play first runs quick checks (up to ~14 min), and the button unlocks when they finish. Google's review then takes a few days.
-6. **Marketing page**: a Beta section with both phones' steps, and the Android CTA pointing at it.
+5. **Advertising ID declaration**: Publishing overview's quick checks block the submit with "Incomplete advertising ID declaration" (everything targeting Android 13+).
+   - Check the merged manifest for `com.google.android.gms.permission.AD_ID`. A plain Capacitor app with no ads SDK and no Firebase doesn't have it, so the answer is **No**.
+   - The quick checks restart after you save it.
+6. **Publishing overview** → "Submit N changes for review". Play first runs quick checks (up to ~14 min), and the button unlocks when they finish. Google's review then takes a few days.
+7. **Marketing page**: a Beta section with both phones' steps, and the Android CTA pointing at it.
    - Android steps: (1) join the group with the Google account the phone uses; (2) open `https://play.google.com/apps/testing/<package>`, tap **Become a tester**, then **Download it on Google Play**.
    - Add the note "If Play says the app isn't available yet, the Android beta is still in Google's review…".
    - Record `store.links.playTesting` and `store.links.androidGroup` in app.config.json.
@@ -40,4 +43,4 @@ Internal testing is **not** this. It's limited to a hand-kept email list and doe
 - **Old drafts block promotion** ("Track already has a draft release"). Replace them.
 - **After the first review passes,** later closed-testing releases can go through the API as `completed`.
 
-Status per app lives in each app's docs/TODO.md. Nature Strip was submitted 2026-09-27.
+Status per app lives in each app's docs/TODO.md. Nature Strip was sent for review 2026-09-27 (15 changes; the review is "typically within 7 days").
