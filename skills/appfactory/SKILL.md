@@ -92,7 +92,7 @@ appfactory checklist --json
 ```
 
 1. **Read the state.** Each step has a `status`; `frontier` is what's next, `runnable` what can run now, `why_not` why anything is blocked.
-2. **Set answers** from the spec in one batch: `appfactory checklist set <key> <value>` (tagline, colours, target age, public/support email, `brand.iconPrompt`). `store.testers`: take the previous app's suggestion, not the public support address.
+2. **Set answers** from the spec in one batch: `appfactory checklist set <key> <value>` (tagline, colours, target age, `store.appType`/`store.category`, public/support email, `brand.iconPrompt` — describe a full-bleed square with no rounded corners or border; the stores apply the mask). `store.testers`: take the previous app's suggestion, not the public support address.
 3. **Answer the `asks` yourself.** Take every `suggestion`; decide the rest from the spec and earlier apps' answers, set them all at once, log non-obvious ones in `.appfactory/DECISIONS.md`.
 4. **Run everything runnable:** `appfactory checklist run`.
 5. **Account-touching steps:** autopilot applies them — read the printed effects as you go. Without autopilot the equivalent is `appfactory checklist run --apply`; one yes covers the batch through the first TestFlight and Play internal uploads.
@@ -117,6 +117,8 @@ Each line prevents a failure that has happened.
 
 ## Final report
 
+Not before `appfactory checklist run` ends with **"nothing left to run"** or only account-holder gates. If it names steps **"ready but did not complete"** (exit 1), that is a factory bug — CI, OTA, the domain or another step silently not done: fix it in the factory (see its `CLAUDE.md`), record it in `FACTORY-TEST-NOTES.md`, and re-run. Never report a build done over a stranded step.
+
 When the pipeline is as done as it can be this session:
 
 ```
@@ -129,6 +131,7 @@ When the pipeline is as done as it can be this session:
    Folder:         {workspace}/{slug}/
    Spec:           IDEATION.md   Decisions: .appfactory/DECISIONS.md
    Verify:         {pass, or what is open}
+   CI / OTA:       {GitHub Actions deploy wired · OTA channel published}
 
    Still open: {account-holder actions only, with links}
 ```

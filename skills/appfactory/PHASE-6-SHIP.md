@@ -11,6 +11,17 @@ Run the pipeline loop in `SKILL.md` until the frontier is empty. This file is th
 - **Submit when the store's requirements are met.** `appfactory release ios --submit-beta --apply` posts TestFlight Beta App Review. `appfactory submit ios|android --apply` (the `you.submit.*` steps, run by the checklist) sends App Store review and the Play closed-testing release once the build, `app.code`, the listing text, screenshots and `web.site` exist. `app.review` and `site.review` run alongside and do not gate it. Report the state each submission returns.
 - **Autopilot is the yes**, but read each account effect before it runs — the app NAME is reserved globally the moment the record exists.
 
+## Before store setup — what only you can answer
+
+These stop `store setup` by design (Sprinklers, 2026-09-28). Answer them; do not work around them.
+
+- **What leaves the device.** `store setup ios|android` stops when the code calls a server that is not the app's own and `store.dataCollected` is not set. Read the calls it names, then declare each data type in `app.config.json` (`type`, `purposes`, `linked`, `tracking`, `shared`, `ephemeral`, `optional`, `note` — see `nature-strip/app.config.json`). Only if those requests carry nothing about the person: `"dataCollected": [], "dataCollectedReviewed": true`. A "collects nothing" label on an app that sends an address is a false label.
+- **App or Game, and the category.** `launch` asks `store.appType` and `store.category` with a suggestion from the plan; under `--auto` the suggestion is taken and printed as assumed. Check it — a game rated as an app gets the wrong IARC questionnaire. Apple's category is set by `store setup ios`; **Play's app category has no API** — set it from the "App category — Store settings" card (Store settings → App category).
+- **Anything printed as `assumed …`** by `launch` is a default, not a decision. Each line names the `checklist set` command that changes it; change the wrong ones before the store steps run.
+- **Purpose strings.** `native sync` / `release ios` write an Info.plist string for every installed Capacitor plugin that needs one. Remove a plugin the app does not use (`npm rm …` — the run names them); reword a string with `apple.purposeStrings` in `app.config.json`, because App Review reads them.
+- **OTA_CHANNELS** is predicted before the first build, merged (never overwritten) by `provision cicd`, and extended by every `release`. If a release prints `OTA_CHANNELS … could not`, run `appfactory provision cicd --apply`.
+- **A red deploy.** `appfactory checklist` prints `last deploy failed at <gate>` when CI's newest deploy run failed — the web is then still on an older build. Fix the gate before telling anyone a web fix is live.
+
 ## What the pipeline covers
 
 These are the checklist's own phase numbers.
@@ -29,6 +40,14 @@ These are the checklist's own phase numbers.
 | 8 — Listing | screenshots | Store text — after `app.review` and after `app.seo.review`, so listing and landing page share one keyword set |
 | 9 — Release | build + upload to TestFlight + Play internal; `submit ios/android` as soon as the store's requirements exist | — |
 | 10 — After | OTA publish; the public page (`web.site`) | `site.review`: the `impeccable` critique of the page, then `appfactory site --reviewed "<note>"` — [`MARKETING-SITE.md`](MARKETING-SITE.md) |
+
+## Privacy and content-rating declarations
+
+`store setup ios|android` derive App Privacy, Data Safety and the IARC rating from the addons, from `src/`, and from `store.*` in app.config.json (keys and record shape: README §7).
+
+- **If the app has hand-written `server/` code** (anything no template or addon ships), read what it receives and set `store.dataCollected` before store setup. Until then both stores' privacy steps file nothing and exit 1 with a todo. `[]` plus `"dataCollectedReviewed": true` means "checked: nothing about the person". Example — a typed street address, geocoded and never stored:
+  `{ "type": "physical-address", "purposes": ["app-functionality"], "linked": false, "tracking": false, "shared": false, "ephemeral": true, "optional": true }`
+- **A game** (`store.appType: game`, a `games-*` / `GameApplication` category, or Apple `GAMES…`) is rated through Play's Game questionnaire. Defaults are "none"; set `store.contentRating` only where the honest answer is "yes" — those are then yours to finish.
 
 ## Custom domain and DNS
 
