@@ -37,6 +37,20 @@ Specific enough that two sessions building from it produce the same-looking app 
 - **Style** — flat/geometric, illustrative, photographic or wordmark, and why.
 - **Generation input** — one dense sentence for `brand.iconPrompt`. `app.icons` always runs (Gemini if keyed, otherwise a local brand monogram); do not wait for artwork or a key. Skip the prompt only if real artwork was supplied.
 
+## Which stack — decide it here, in product terms
+
+Name the requirements the idea implies; the recommendation follows them, not the owner's taste in frameworks.
+
+| The idea needs | Requirement | Stack |
+|---|---|---|
+| a phone app, offline, native feel | (none of the below) | Ionic Vue (default), TestFlight + Play |
+| server-side logic, a database, server actions | `server` | **Full-stack React** (`--stack-profile fullstack-react`) |
+| public pages that must be crawled and shared | `seo` | **Full-stack React** |
+| the app sends email (invites, receipts, notices) | `email` | **Full-stack React** |
+| sign-in by magic link, or invite-only access | `auth` + `magic-link` | **Full-stack React** |
+
+Full-stack React is **beta and web only**: no store builds, so the spec must not promise TestFlight or Play. Say which stack you chose and why in `.appfactory/DECISIONS.md`. Write the rest of the spec for the chosen chassis: `src/App.vue`, `src/router.js` and Ionic components exist only on the Ionic chassis; on Full-stack React the screens are `src/pages/<Screen>Page.tsx` behind `app/app/<route>/page.tsx` wrappers, and the plan's routes are `/app/...`.
+
 ## What every app ships with
 
 **The resolved chassis and its bindings provide the technical implementation.** Design against them; do not invent a parallel stack or hard-code Ionic patterns from memory. After `appfactory new`, read:

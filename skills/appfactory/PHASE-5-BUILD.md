@@ -49,9 +49,9 @@ Start the product work (step 3) while this runs.
 
 The scaffold is chassis, not product. You write the app described in `IDEATION.md` — all of it; never hand it back as a todo. This is `app.code`, marked `soft`: nothing blocks on it, so it runs beside the pipeline.
 
-**`src/App.vue` is a worked example of the whole structure** — tabs, a pushed screen, a settings sheet, an empty state, a hint, delete-with-undo, onboarding. Replace its content, keep its shape.
+**On the Ionic chassis, `src/App.vue` is a worked example of the whole structure** — tabs, a pushed screen, a settings sheet, an empty state, a hint, delete-with-undo, onboarding. Replace its content, keep its shape.
 
-- **Key screens** → one component each in `src/components/`, switched from `src/App.vue`. `src/core/` is off-limits.
+- **Key screens** → one component each in `src/components/`, switched from `src/App.vue`. `src/core/` is off-limits. (Ionic chassis; for Next.js see the worked example below.)
 - **Tabs and pushed screens** → the `TABS` array and routes in `src/router.js`, then `router.push()`. No custom navigation.
 - **Primary user flow** → the default path through those screens.
 - **MVP features** → all of them.
@@ -78,6 +78,23 @@ Run `npm run dev` and check in a browser as you build. Before calling it done, w
 ```
 appfactory checklist done app.code
 ```
+
+## Full-stack React (Next.js) worked example
+
+When `APPSPEC.json` says `fullstack-react` (chassis `nextjs-app-v1`), everything above that names `src/App.vue`, `src/router.js` or `IonHeader` is Ionic-only. Next's router is the file system, and the screens are React. The shape to keep:
+
+- **`app/` holds route wrappers, `src/pages/` holds screens.** `app/app/<route>/page.tsx` is a thin **server** component: `export const metadata` and the screen it renders, nothing else. `src/pages/<Screen>Page.tsx` is the **client** component (`'use client'`) with the actual screen. A dynamic route is `app/app/task/[taskId]/page.tsx` and passes the param down. `app/app/layout.tsx` is the navigation shell; keep `<div data-app-root>` around `{children}`.
+- **Do not put routes in a root `pages/` folder, and do not delete it.** The empty `pages/` at the project root exists so Next ignores `src/pages/` (which it would otherwise treat as the legacy Pages Router and turn `HomePage.tsx` into a public `/HomePage`). Routes belong in `app/`.
+- **Generate, then edit.** `appfactory product init`, write the plan with `/app/...` routes, `appfactory product apply --apply`. The `nextjs-app` renderer writes the wrappers, screens, `src/store.ts` (`addX / saveX / removeX / findX / recentX`, `useXs()`, `destroyX()` with undo, seeded through `demoData`), `src/product-routes.ts` and `tests/store.test.ts`, and removes the pristine scaffold example. A screen that writes an entity it does not read becomes that entity's form. Routes outside `/app` are mounted under it and reported.
+- **Links are demo-aware.** `/demo` is `/app` with sample data: middleware rewrites `/demo/*` to `/app/*` and sets `x-appfactory-demo`. Every internal link and router call goes through `useAppHref()` (or `hrefFor(path, demo)` outside a component), or a visitor walks out of the demo into the empty real app. Never hard-code `href="/app/..."`.
+- **Server components import `src/core/ui/*` directly.** `AppLargeTitle`, `AppHeader`'s styles and the `.btn` / `.list` / `.empty` classes need no client boundary; only components with state or handlers (`ActionRail`, `Onboarding`, `AppHeader`) do. Do not wrap a whole page in a client component to use one hook.
+- **Server logic lives in server actions and route handlers.** Mutations are `'use server'` functions in `app/**/actions.ts` (validate input, check the session with `src/core/auth.ts`, then touch the database); reads that need the server are server components. HTTP endpoints are `app/api/**/route.ts`. Nothing under `src/pages/` or `src/store.ts` may import a server-only module.
+- **Secrets.** Declare every runtime secret in `app.config.json` under `cloud.secrets`, and list each name in `.env.example` (names only, never values). A list (`["DATABASE_URL"]`) means per-app: the owner sets each from their own shell with `appfactory secrets set app.<slug>.env.<NAME>` (it moves from their environment to Secret Manager; never ask for a value in the conversation). An object names a source per variable — prefer it, because shared credentials are stored once, not per app: `{ "ANTHROPIC_API_KEY": "vault:anthropic.apiKey", "RESEND_API_KEY": "vault:resend.apiKey", "SESSION_SECRET": "generate", "DATABASE_URL": "app", "STRIPE_KEY": "gsm:<existing-secret-id>" }`. `vault:<key>` reads a shared vault key (`appfactory secrets list` shows them under *services*) and deploys it to ONE shared Secret Manager secret (`shared_<key>`) every app binds; `generate` makes 48 random bytes on the first `provision --apply` and keeps them in `app.<slug>.env.<NAME>`; `gsm:<id>` binds a secret that already exists in the project by reference — it is checked with `gcloud secrets describe` and never read; `app` is the per-app key. `provision --apply` refuses to deploy, before any work, with a declared secret missing, and names the command that fixes it. Plain settings go in `cloud.env`. Missing values must disable their feature, not crash: `/api/health` says which are configured.
+- **Addons.** `appfactory add <name>` edits `src/addons.ts` (client) and `server/addons.mjs` (server). Addon server modules are Node-style `(req, res, pathname)` handlers; `server/addon-bridge.mjs` runs them unchanged under `app/api/[...addon]/route.ts`. Do not rewrite an addon as a route handler.
+- **Sign-in** is a signed-cookie session (`SESSION_SECRET`) with magic links minted through the email addon; WHO may sign in is `server/users.mjs`, which the app implements. The `guard` hook in `middleware.ts` protects routes.
+- **Files read at runtime** (email templates, agent prompts, content) via `readFileSync(join(process.cwd(), 'templates', ...))` are not traced by `output: 'standalone'`. `next.config.ts` includes the globs in `app.config.json` -> `web.serverFiles` (default `["templates/**/*", "prompts/**/*", "content/**/*"]`); add any other folder you read from, and always resolve from `process.cwd()`. After `npm run build`, check `.next/standalone/<folder>/` exists.
+- **Verify** with `npm run build` (type-checks and lints; a screen that does not compile fails here), `npm test`, then `appfactory verify`. QA opens `/demo` on the desktop viewport.
+- **Code subagent** touches `app/app/**`, `src/pages/`, `src/store.ts`, `src/components/`, `src/styles/app.css`, `server/users.mjs` and anything it adds under `app/**/actions.ts`; never `src/core/` or the Dockerfile and workflow.
 
 ## 4. Verify — the loop
 

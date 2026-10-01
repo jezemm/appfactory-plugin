@@ -110,6 +110,7 @@ Each line prevents a failure that has happened.
 - **Never invent, buy or pass a domain.** No `--origin` on `appfactory new`; `*.a.run.app` is correct until an owned parent is known. When one is (`learned.originDomain`), use `{slug}.{parent}` — see `PHASE-6-SHIP.md`.
 - **DNS is yours, not a paste card for the human.** CNAME `{slug}` → `ghs.googlehosted.com`, **proxied: false**. Never print `cloudflare.apiToken`.
 - **Never create the GitHub repo by hand** (`gh repo create`) — `app.github` does it.
+- **Pick the stack from the requirements, not from habit.** The default is the Ionic Vue chassis (native apps). If the spec's requirements include **server** logic or a database, **seo** (public pages that must rank), **email** the app sends, or **magic-link / invite-only auth**, the recommendation is **Full-stack React** — pass `--stack-profile fullstack-react` to `appfactory new` (beta, web only; no TestFlight or Play). Everything in the skill that names `src/App.vue`, `src/router.js` or Ionic components applies to the Ionic chassis only; for Next.js follow "Full-stack React (Next.js) worked example" in `PHASE-5-BUILD.md`.
 - **`src/core/` is factory-owned** — never edit it. A literal hex or pixel value in a component is a bug; use the tokens.
 - **No `listing.screenshots` before `app.review`** — the shots go stale.
 - **Factory Chrome only.** Never quit the user's everyday Chrome; if a stale factory Chrome holds `SingletonLock` under `~/.app-factory/browser/<apple|google>`, kill only that PID. Never two factory Chromes on one profile.
