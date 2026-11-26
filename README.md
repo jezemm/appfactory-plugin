@@ -3,6 +3,33 @@
 Take an app idea from a sentence to a working, deployed app: a website, an
 iPhone app and an Android app, from one codebase.
 
+## Highlights
+- One sentence in, a live website plus iPhone and Android apps out, from one codebase.
+- Argues with your idea first, then writes a design and waits for your yes.
+- Builds, opens the app in a real browser, checks every screen, deploys, and reports links.
+- Never picks your app name or bundle id, spends money, or submits for review on its own.
+- No Mac needed: iPhone builds run on Apple's own Xcode Cloud.
+- Everything lands in your accounts: your GitHub, Google Cloud, Apple and Play.
+- Works in Claude Code, Codex, or any MCP client (Cursor and others).
+
+## Status
+- Active. Version 0.4.0 (Oct 2026): added a full-stack React (Next.js) worked example and shared-secrets docs.
+- The hosted factory at `https://mcp.appfactory.jeremymarks.com.au/mcp` is reachable (it answers MCP requests, not browsers).
+
+## Features
+- Claude Code plugin with the `/appfactory <idea>` slash command (`commands/appfactory.md`).
+- Skill `skills/appfactory/` for Claude Code and Codex; `install.sh` copies it for Codex and registers the MCP server.
+- Phase files the agent reads in order: idea, research (parallel subagents), spec, build, ship.
+- Extra guides: UX polish pass, SEO pass, public marketing page, parallel working, Android public-beta runbook.
+- Same instructions served as the MCP prompt `ideate-and-build` for clients without skill support.
+- Surfaces: Claude Code plugin, Codex skill, MCP clients. The apps it builds target web, iOS and Android.
+- Not present: no code, server, tests or CI in this repo; it is instructions and an install script.
+
+## Powered by
+- App Factory MCP server (hosted): the actual build, deploy and release tools.
+- Xcode Cloud: builds iPhone apps without your own Mac.
+- GitHub, Google Cloud, App Store Connect and Google Play: where your app and code end up.
+
 ## Two things, and the second is the one people skip
 
 This repo is the **instructions**. The **factory** is a separate hosted service.
@@ -135,3 +162,9 @@ it is maintained. Some paths it mentions (`cli/checklist.mjs`, `template/…`)
 exist only once the CLI is installed; they are addressed to an agent that has
 it. Do not edit these files here — changes belong upstream, or they are
 overwritten on the next release.
+
+## Tests & CI
+- None. No workflows in this repo; releases are a version bump in `.claude-plugin/plugin.json`.
+
+## To-dos
+- GitHub Issues on this repo.
